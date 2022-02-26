@@ -1,6 +1,15 @@
-.PHONY: stack
-stack:
-	@gcc -Wall stack.c -o stack
+CC=gcc
+CFLAGS=-g -Wall
+BIN=stack
+
+all: $(BIN)
+
+release: CFLAGS=-Wall -O2 -DNDEBUG
+release: clean
+release: $(BIN)
+
+$(BIN): $(BIN).c
+	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	@rm stack
+	$(RM) $(BIN)

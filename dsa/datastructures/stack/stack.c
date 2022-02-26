@@ -15,46 +15,56 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* define the size of stack to be used */
-#define SIZE 5
+/* stack is a LIFO datastrucutre like a stack of clothes */
+typedef struct stack {
+  int top;
+  int size;
+  int *arr;
+} stack;
 
-/* initialize an array to be used as a stack */
-int ARR[SIZE];
-
-/* a variable representing the current head of the stack  */
-int TOP = -1;
-
-void push() {
-  if (TOP == SIZE - 1) {
-    printf("Stack overflow\n");
+/* push function pushes a new item on top of stack */
+void push(stack *s) {
+  if (s->top == s->size - 1) {
+    printf("stack overflow\n");
     return;
   }
-  TOP += 1;
+
+  s->top += 1;
   int value;
-  printf("Enter the value to push\n");
+  printf("Enter the int value to push\n");
   scanf("%d", &value);
-  ARR[TOP] = value;
+  s->arr[s->top] = value;
 }
 
-void pop() {
-  if (TOP == -1) {
-    printf("Stack is empty.\n");
+/* pop function pops the top item from stack and returns it */
+int pop(stack *s) {
+  if (s->top == -1) {
+    printf("stack is empty.\n");
+    return -1;
+  }
+
+  int value = s->arr[s->top];
+  printf("Popping: %d\n", value);
+  s->top -= 1;
+  return value;
+}
+
+/* display function prints the stack */
+void display(stack *s) {
+  if (s->top == -1) {
+    printf("stack is empty\n");
     return;
   }
-  printf("Popping: %d\n", ARR[TOP]);
-  TOP -= 1;
-}
-
-void display() {
-  if (TOP == -1) {
-    printf("Stack is empty\n");
-  }
-  for (int i = TOP; i >= 0; i--) {
-    printf("The item at %d is %d\n", i, ARR[i]);
+  for (int i = s->top; i >= 0; i--) {
+    printf("The item at %d is %d\n", i, s->arr[i]);
   }
 }
 
 int main(void) {
+  stack s;
+  s.top = -1;
+  s.size = 5;
+  s.arr = malloc(sizeof(int) * s.size);
   printf("--Stack Program--\n");
 
   int choice;
@@ -67,13 +77,13 @@ int main(void) {
     scanf("%d", &choice);
     switch (choice) {
     case 1:
-      push();
+      push(&s);
       break;
     case 2:
-      pop();
+      pop(&s);
       break;
     case 3:
-      display();
+      display(&s);
       break;
     case 4:
       return 0;

@@ -15,6 +15,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define STACK_OVERFLOW "!!!Stack overflow\n"
+#define STACK_EMPTY "!!!Stack is empty.\n"
+
 /* stack is a LIFO datastrucutre like a stack of clothes */
 typedef struct stack {
   int top;
@@ -23,36 +26,32 @@ typedef struct stack {
 } stack;
 
 /* push function pushes a new item on top of stack */
-void push(stack *s) {
+void push(stack *s, int value) {
   if (s->top == s->size - 1) {
-    printf("stack overflow\n");
+    printf(STACK_OVERFLOW);
     return;
   }
 
-  s->top += 1;
-  int value;
-  printf("Enter the int value to push\n");
-  scanf("%d", &value);
+  s->top++;
   s->arr[s->top] = value;
 }
 
 /* pop function pops the top item from stack and returns it */
 int pop(stack *s) {
   if (s->top == -1) {
-    printf("stack is empty.\n");
+    printf(STACK_EMPTY);
     return -1;
   }
 
   int value = s->arr[s->top];
-  printf("Popping: %d\n", value);
-  s->top -= 1;
+  s->top--;
   return value;
 }
 
 /* display function prints the stack */
 void display(stack *s) {
   if (s->top == -1) {
-    printf("stack is empty\n");
+    printf(STACK_EMPTY);
     return;
   }
   for (int i = s->top; i >= 0; i--) {
@@ -67,7 +66,7 @@ int main(void) {
   s.arr = malloc(sizeof(int) * s.size);
   printf("--Stack Program--\n");
 
-  int choice;
+  int choice, value;
   while (1) {
     printf("\nEnter your choice\n"
            "1. Push item\n"
@@ -77,15 +76,18 @@ int main(void) {
     scanf("%d", &choice);
     switch (choice) {
     case 1:
-      push(&s);
+      printf("Enter the int value to push\n");
+      scanf("%d", &value);
+      push(&s, value);
       break;
     case 2:
-      pop(&s);
+      printf("Popping: %d\n", pop(&s));
       break;
     case 3:
       display(&s);
       break;
     case 4:
+      free(s.arr);
       return 0;
       break;
     default:
